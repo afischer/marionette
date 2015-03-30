@@ -20,7 +20,7 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     },
     template: '#article-template',
     tagName: 'li',
-    className: 'list-item'
+    className: 'table-view-cell'
 });
 
 var ListView = Backbone.Marionette.CompositeView.extend({
@@ -34,9 +34,9 @@ var ListView = Backbone.Marionette.CompositeView.extend({
 
 
 var dataArray = [
-    {"title":"Article1"},
-    {"title":"Article2"},
-    {"title":"Article3"}
+    {"title":"Article1","comments":'5',"author":'John Doe', "date":'Jan 2, 2015'},
+    {"title":"Article2","comments":'26',"author":'John Doe', "date":'Feb 22, 2015'},
+    {"title":"Article3","comments":'3',"author":'John Doe', "date":'Apr 25, 2015'}
 ];
 
 var theCollection = new TheCollection(dataArray);

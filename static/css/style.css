@@ -1,0 +1,9 @@
+#metaData {
+    color: black;
+    font-style: emphasis;
+}
+
+#preview {
+    display: inline;
+    display: nowrap;
+}

@@ -8,14 +8,18 @@
 </div>
 
 <script type="text/template" id="article-list-tempate">
-    <ul id="article-list">
+    <ul class="table-view" id="article-list">
     </ul>
 </script>
 
 <script type="text/template" id="article-template">
-  <%=title%>
+  <a class="navigate-right">
+    <span class="badge"><%=comments%></span>
+    <%=title%>
+    <p id="metaData"> <%=author%>  |  <%=date%> </p>
+    <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt... </p>
+  </a>
 </script>
-
 
 
 {% endblock body %}
