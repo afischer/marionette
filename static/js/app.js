@@ -1,18 +1,28 @@
-console.log("STARTING APP YO!");
+console.log("LETS GO");
 
-window.App = new Backbone.Marionette.Application();
+var App = new Marionette.Application();
 
 App.addRegions({
   articleRegion: '#article-region'
 });
 
-var theModel = Backbone.Model.extend({});
+App.on("start", function(){
+  console.log("in Start block");
 
-var TheCollection = Backbone.Collection.extend({
-    model: theModel,
+  var listView = new App.ListView({collection:data});
+  App.articleRegion.show(listView);
+
+  Backbone.history.start();
+
 });
 
-var ItemView = Backbone.Marionette.ItemView.extend({
+// var article = Backbone.Model.extend({});
+//
+// var articles = Backbone.Collection.extend({
+//     model: article,
+// });
+
+App.ItemView = Backbone.Marionette.ItemView.extend({
     initialize: function() {
         //For Debugging Purposes:
         //console.log('this.model =',this.model);
@@ -20,49 +30,81 @@ var ItemView = Backbone.Marionette.ItemView.extend({
     },
     template: '#article-template',
     tagName: 'li',
-    className: 'table-view-cell'
+    className: 'table-view-cell',
+    modelEvents : {
+				"change" : function() { this.render(); }
+		}
 });
 
-var ListView = Backbone.Marionette.CompositeView.extend({
+App.ListView = Backbone.Marionette.CompositeView.extend({
 	tagName: 'div',
 	className: 'js-list-container',
 	template: '#article-list-tempate',
 	childViewContainer: 'ul',
-	childView: ItemView
+	childView: App.ItemView,
+  modelEvents : {
+      "change" : function() { this.render(); }
+  }
+});
+
+var myController = Marionette.Controller.extend({
+  default : function(){
+    var compview = new App.CompView({model:article,collection:data});
+    App.firstRegion.show(compview);
+  }
+});
+
+var Article = Backbone.Model.extend();
+
+var Articles = Backbone.Collection.extend({
+		model:Article
 });
 
 
-
-var dataArray = [
-    {"title":"Article1","comments":'5',"author":'John Doe', "date":'Jan 2, 2015'},
-    {"title":"Article2","comments":'26',"author":'John Doe', "date":'Feb 22, 2015'},
-    {"title":"Article3","comments":'3',"author":'John Doe', "date":'Apr 25, 2015'}
-];
-
-var theCollection = new TheCollection(dataArray);
-var listView = new ListView({collection: theCollection});
-
-App.articleRegion.show(listView);
+// var test = new Article({"title":"Test Article","comments":'69',"author":'Your Mom', "date":'Apr 25, 2015'});
+var data = new Articles([]);
+//data.push(test);
 
 App.start();
 
 
-/*
-google.load("feeds", "1");
+// Google Feeds Attempt... Weird 4 entry limit per call
+// google.load("feeds", "1"); //Load Feeds API
+// function parseFeeds() {
+//   var specFeed = new google.feeds.Feed("http://www.stuyspec.com/feed");
+//   specFeed.load(function(result) {
+//     if (!result.error) {
+//       console.log(result.feed.entries.length);
+//       for (var i = 0; i < result.feed.entries.length; i++) {
+//         var entry = result.feed.entries[i];
+//         var t = entry.title;
+//         var d = new Date(entry.publishedDate).toDateString().substr(4);
+//         var a = entry.author;
+//         var cs = entry.contentSnippet;
+//         data.push(new Article({"title":t,"comments":4,"author":a,"date":d}));
+//           };
+//         }
+//       });
+//     }
+//     google.setOnLoadCallback(parseFeeds);
 
-    function initialize() {
-      var feed = new google.feeds.Feed("http://www.stuyspec.com/feed");
-      feed.load(function(result) {
-        if (!result.error) {
-          var container = document.getElementById("feed");
-          for (var i = 0; i < result.feed.entries.length; i++) {
-            var entry = result.feed.entries[i];
-            var div = document.createElement("div");
-            div.appendChild(document.createTextNode(entry.title));
-            container.appendChild(div);
-          }
+
+google.load("feeds", "1");
+google.setOnLoadCallback(parseFeeds);
+
+function parseFeeds() {
+  var feed = new google.feeds.Feed("http://www.stuyspec.com/feed/");
+	  feed.setNumEntries(10);
+    feed.load(function(result) {
+      if (!result.error) {
+        for (var i = 0; i < result.feed.entries.length; i++) {
+          var entry = result.feed.entries[i];
+          var t = entry.title;
+          var d = new Date(entry.publishedDate).toDateString().substr(4);
+          var a = entry.author;
+          var cs = entry.contentSnippet;
+          data.push(new Article({"title":t,"comments":"?","author":a,"date":d,"contentSnippet":cs}));
         }
-      });
-    }
-    google.setOnLoadCallback(initialize);
-*/
+      }
+    });
+  };

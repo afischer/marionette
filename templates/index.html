@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
 <br><br>
-<!-- <div id="feed"></div> -->
-
 
 <div id="article-region">
 </div>
@@ -17,9 +15,11 @@
     <span class="badge"><%=comments%></span>
     <%=title%>
     <p id="metaData"> <%=author%>  |  <%=date%> </p>
-    <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt... </p>
+    <p> <%=contentSnippet%> </p>
   </a>
 </script>
+
+<div id="feed"></div>
 
 
 {% endblock body %}
